@@ -1,0 +1,479 @@
+{% extends 'base.html' %} {% block title %}
+<h4>Social Market Int</h4>
+{% endblock title %} {% block body %}
+
+<main id="main" class="main">
+  <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <style>
+    table.dataTable thead .sorting:after,
+    table.dataTable thead .sorting:before,
+    table.dataTable thead .sorting_asc:after,
+    table.dataTable thead .sorting_asc:before,
+    table.dataTable thead .sorting_asc_disabled:after,
+    table.dataTable thead .sorting_asc_disabled:before,
+    table.dataTable thead .sorting_desc:after,
+    table.dataTable thead .sorting_desc:before,
+    table.dataTable thead .sorting_desc_disabled:after,
+    table.dataTable thead .sorting_desc_disabled:before {
+      bottom: 0.5em;
+    }
+  </style>
+
+  <script>
+    $(document).ready(function () {
+      $("#dtOrderExample").DataTable({
+        order: [[2, "desc"]],
+      });
+      $(".dataTables_length").addClass("bs-select");
+    });
+  </script>
+
+  <div class="card">
+    <div class="text-md-center" style="margin-top: 20px">
+      <h4 style="color: cornflowerblue">
+        <b>GMX Top Trader Activity Dashboard</b>
+      </h4>
+      <br />
+    </div>
+  </div>
+
+  <!-- Table starts -->
+
+  <section class="card">
+    <div class="overflow-auto" style="height: 550px; overflow-y: scroll">
+      <table id="dtOrderExample" class="table table-bordered">
+
+        <p class="text-md-center" style="color:cornflowerblue;">Live data updates every <b>6</b> hours
+        </p>
+
+
+        <thead class="table-primary">
+          <tr>
+            <th scope="col">Last Trade</th>
+            <th scope="col">Market</th>
+            <!-- <th scope="col">Trade</th> -->
+            <th scope="col">Trade</th>
+            <th scope="col">Price</th>
+            <th scope="col">Volume USD</th>
+            <th scope="col">Margin USD</th>
+            <th scope="col">Leverage Size</th>
+            <!-- <th scope="col">Trader</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          {% for key, trader in traders.items %}
+          <tr>
+            <td>{{ trader.minute }}</td>
+            <td>{{ trader.market }}</td>
+            <!-- <td>{{ trader.trade }}</td> -->
+            <td>{{ trader.trade_type }}</td>
+            <td>{{ trader.price }}</td>
+            <td>{{ trader.volume_usd }}</td>
+            <td>{{ trader.margin_usd }}</td>
+            <td>{{ trader.leverage_size }}</td>
+            <!-- <td>{{ trader.trader}}</td> -->
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- table ends -->
+
+  <br />
+
+  <!-- donut chart and bar chart starts -->
+  <section>
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">BTC POSITION ACTIVITY</h5>
+              <!-- Donut Chart -->
+              <div id="donutChartBTC"></div>
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#donutChartBTC"), {
+                    series: {{ volume_usd_btc }},
+                  chart: {
+                  height: 350,
+                  type: 'donut',
+                  toolbar: {
+                    show: true
+                  }
+                },
+                  labels: {{ trade_type_btc| safe}},
+                    }).render();
+                });
+              </script>
+              <!-- End Donut Chart -->
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="card" style="height: 440px">
+            <div class="card-body">
+              <h5 class="card-title">BTC average price position</h5>
+              <!-- Bar Chart -->
+              <canvas id="barChartBTC" style="max-height: 300px"></canvas>
+              <script>
+
+                document.addEventListener("DOMContentLoaded", () => {
+                  new Chart(document.querySelector('#barChartBTC'), {
+                    type: 'bar',
+                    data: {
+                      labels: {{ trade_type_btc| safe}},
+                  datasets: [{
+                    label: 'Bar Chart',
+                    data: {{ avg_price_btc }},
+                  backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 205, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(201, 203, 207, 0.2)'
+                  ],
+                  borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
+                    'rgb(201, 203, 207)'
+                  ],
+                  borderWidth: 1
+                            }]
+                        },
+                  options: {
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      title: {
+                        display: true,
+                        text: 'Average Price'
+                      }
+                    },
+                    x: {
+                      title: {
+                        display: true,
+                        text: 'Trade Type'
+                      }
+                    }
+                  }
+                }
+                    });
+                });
+              </script>
+              <!-- End Bar Chart -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- END here -->
+
+  <!-- pie chart and bar chart starts -->
+
+  <section>
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">ETH POSITION ACTIVITY</h5>
+              <!-- Donut Chart -->
+              <div id="donutChartETH"></div>
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#donutChartETH"), {
+                    series: {{ volume_usd_eth }},
+                  chart: {
+                  height: 350,
+                  type: 'donut',
+                  toolbar: {
+                    show: true
+                  }
+                },
+                  labels: {{ trade_type_eth| safe}},
+                    }).render();
+                });
+              </script>
+              <!-- End Donut Chart -->
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="card" style="height: 440px">
+            <div class="card-body">
+              <h5 class="card-title">ETH average price position</h5>
+              <!-- Bar Chart -->
+              <canvas id="barChartETH" style="max-height: 300px"></canvas>
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new Chart(document.querySelector('#barChartETH'), {
+                    type: 'bar',
+                    data: {
+                      labels: {{ trade_type_eth| safe}},
+                  datasets: [{
+                    label: 'Bar Chart',
+                    data: {{ avg_price_eth }},
+                  backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 205, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(201, 203, 207, 0.2)'
+                  ],
+                  borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
+                    'rgb(201, 203, 207)'
+                  ],
+                  borderWidth: 1
+                            }]
+                        },
+                  options: {
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      title: {
+                        display: true,
+                        text: 'Average Price '
+                      }
+                    },
+                    x: {
+                      title: {
+                        display: true,
+                        text: 'Trade Type'
+                      }
+                    }
+                  }
+                }
+              });
+                });
+              </script>
+              <!-- End Bar Chart -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+  <!-- END here -->
+
+  <!-- Sentiments section -->
+  <section class="section">
+    <div class="card">
+      <div class="text-md-center" style="margin-top: 20px">
+        <h4 style="color: cornflowerblue">
+          <b>Twitter Sentiments Analysis</b>
+        </h4>
+        <br />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="card" style="height: 440px">
+          <div class="card-body">
+            <h5 class="card-title">$BTC Sentiments on Twitter</h5>
+            <!-- Bar Chart -->
+            <canvas id="barChartsentiments" style="max-height: 300px"></canvas>
+            <script>
+              document.addEventListener("DOMContentLoaded", () => {
+                new Chart(document.querySelector('#barChartsentiments'), {
+                  type: 'bar',
+                  data: {
+                    labels: {{ sentiments_labels| safe}},
+                datasets: [{
+                  label: 'Bar Chart',
+                  data: {{ sentiments_value }},
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 205, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(201, 203, 207, 0.2)'
+                ],
+                borderColor: [
+                  'rgb(255, 99, 132)',
+                  'rgb(255, 159, 64)',
+                  'rgb(255, 205, 86)',
+                  'rgb(75, 192, 192)',
+                  'rgb(54, 162, 235)',
+                  'rgb(153, 102, 255)',
+                  'rgb(201, 203, 207)'
+                ],
+                borderWidth: 1
+                          }]
+                      },
+                options: {
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    title: {
+                      display: true,
+                      text: 'Sentiments Percentage % '
+                    }
+                  },
+                  x: {
+                    title: {
+                      display: true,
+                      text: 'Sentiments'
+                    }
+                  }
+                }
+              }
+                  });
+              });
+            </script>
+            <!-- End Bar Chart -->
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card" style="height: 440px">
+          <div class="card-body">
+            <h5 class="card-title">
+              {{topic_user|safe}} Sentiments on Twitter
+            </h5>
+
+            <form method="post">
+              {% csrf_token %}
+
+              <div>
+                Topic:&nbsp;<input type="text" name="topic" />
+                &nbsp;
+                <input type="submit"   onclick="this.form.submit();this.disabled = true;" value="Submit" />
+              </div>
+            </form>
+
+            <!-- Bar Chart -->
+            <canvas id="barChartsentimentsUsers" style="max-height: 300px"></canvas>
+            <script>
+              document.addEventListener("DOMContentLoaded", () => {
+                new Chart(document.querySelector('#barChartsentimentsUsers'), {
+                  type: 'bar',
+                  data: {
+                    labels: {{ sentiments_labels_user| safe}},
+                datasets: [{
+                  label: 'Bar Chart',
+                  data: {{ sentiments_value_user }},
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 205, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(201, 203, 207, 0.2)'
+                ],
+                borderColor: [
+                  'rgb(255, 99, 132)',
+                  'rgb(255, 159, 64)',
+                  'rgb(255, 205, 86)',
+                  'rgb(75, 192, 192)',
+                  'rgb(54, 162, 235)',
+                  'rgb(153, 102, 255)',
+                  'rgb(201, 203, 207)'
+                ],
+                borderWidth: 1
+                          }]
+                      },
+                options: {
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    title: {
+                      display: true,
+                      text: 'Sentiments Percentage % '
+                    }
+                  },
+                  x: {
+                    title: {
+                      display: true,
+                      text: 'Sentiments'
+                    }
+                  }
+                }
+              }
+                  });
+              });
+            </script>
+            <!-- End Bar Chart -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="container-fluid">
+    <div class="card" style="height: fit-content">
+      <div class="card-body">
+        <div class="text-md-center">
+          <h4 class="card-title bg-primary-light">
+            Latest Whale Movements !!!
+          </h4>
+        </div>
+
+        <!-- List group With Contextual classes -->
+        <ul class="row">
+          {% for whale in whale_alert_movements_list %}
+          <li>
+            {{whale |safe}}
+          </li>
+          {% endfor %}
+        </ul>
+        <!-- End  NEWS SECTION -->
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="card" style="height: fit-content">
+      <div class="card-body">
+        <div class="text-md-center">
+          <h4 class="card-title bg-primary-light">
+            Whats brewing in crypto??? &#x2615;
+          </h4>
+        </div>
+
+        <!-- List group With Contextual classes -->
+        <ul class="list-group">
+          {% for news,url in news_list %}
+          <li class="list-group-item" onclick="window.location.href='{{url}}'">
+            {{news}}
+          </li>
+          {% endfor %}
+        </ul>
+        <!-- End  NEWS SECTION -->
+      </div>
+    </div>
+
+  </section>
+</main>
+
+{% endblock body %}

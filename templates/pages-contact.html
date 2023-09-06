@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+
+<title>contact us</title>
+
+{% endblock title %}
+
+
+
+{% block body %}
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Contact</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="macro">Home</a></li>
+                <li class="breadcrumb-item">Pages</li>
+                <li class="breadcrumb-item active">Contact</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section contact">
+
+        <div class="row gy-4">
+
+            <div class="col-xl-6">
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="info-box card">
+                            <i class="bi bi-geo-alt"></i>
+                            <h3>Address</h3>
+                            <p>205 Apex@Henderson Road ,<br>Singapore 159545</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="info-box card">
+                            <i class="bi bi-telephone"></i>
+                            <h3>Contact</h3>
+                            <p> Telegram Id : &nbsp;<br> @coinpulse </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="info-box card">
+                            <i class="bi bi-envelope"></i>
+                            <h3>Email</h3>
+                          
+                            <p>coinpulse.ai@protonmail.com </p>
+                           
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="info-box card">
+                            <i class="bi bi-clock"></i>
+                            <h3>Open Hours</h3>
+                            <p>Monday - Friday &nbsp; 9:00AM - 05:00PM</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xl-6">
+                <div class="card p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row gy-4">
+
+                            <div class="col-md-6">
+                                <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                            </div>
+
+                            <div class="col-md-6 ">
+                                <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+                            </div>
+
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+                            </div>
+
+                            <div class="col-md-12">
+                                <textarea class="form-control" name="message" rows="6" placeholder="Message"
+                                    required></textarea>
+                            </div>
+
+                            <div class="col-md-12 text-center">
+
+
+                                <button class="btn btn-primary w-100" onclick="this.form.submit();this.disabled = true;" type="submit">Send Message</button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="text-md-center">
+            <div class="credits">
+                Designed by <a>coinpulse</a>
+            </div>
+        </div>
+
+    </section>
+
+</main><!-- End #main -->
+
+
+{% endblock body %}

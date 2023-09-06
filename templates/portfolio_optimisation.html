@@ -1,0 +1,490 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+<title>Portfolio optimisation</title>
+
+{% endblock title %}
+
+
+{% block body %}
+
+
+<main id="main" class="main">
+
+
+    <div class="card">
+        <div class="text-md-center" style="margin-top: 20px">
+          <h2 style="color: cornflowerblue">
+            <b>Portfolio optimisation playground</b>
+          </h2>
+          <br />
+        </div>
+      </div>
+
+    <div class="row">
+
+
+
+        
+
+        
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+
+                        <br>
+                    
+
+
+                        <h3 style="color: cornflowerblue">Select from crypto symbols for portfolio optimisation</h3>
+                        <br>
+                        <form id="myForm" method="post">
+                            {% csrf_token %}
+                            Model type:
+                            <br>
+                            <select name="op_type">
+                                <option value="hrp">Hierarchical risk Parity</option>
+                                <option value="herc">Hierarchical equal risk contribution method</option>
+                                <option value="maxdiv">Diversification technique</option>
+                                <option value="maxdecorr">Decorrelation technique</option>
+                                <option value="maxret">Maximum return</option>
+                                <option value="maxsharpe">Maximum sharpe ratio</option>
+                                <option value="maxutil">Maximum utility</option>
+                                <option value="minrisk">Minimum sharpe ratio</option>
+                                <option value="nco">Non-Convex optimization method</option>
+                                <option value="relriskparity">Risk parity (Least square approach) </option>
+                                <option value="riskparity">Risk parity using risk budgeting approach </option>
+                            </select>
+
+                            <br>
+                            <br>
+
+                            Select symbol:
+                            <br>
+                            
+                            <select id="mySelect" multiple>
+                                <option value="BTC-USD">BTC-USD</option>
+                                <option value="RNDR-USD">RNDR-USD</option>
+                                <option value="ETH-USD">ETH-USD</option>
+                                <option value="BNB-USD">BNB-USD</option>
+                                <option value="XRP-USD">XRP-USD</option>
+                                <option value="ADA-USD">ADA-USD</option>
+                                <option value="DOGE-USD">DOGE-USD</option>
+                                <option value="MATIC-USD">MATIC-USD</option>
+                                <option value="SOL-USD">SOL-USD</option>
+                                <option value="TRX-USD">TRX-USD</option>
+                                <option value="LTC-USD">LTC-USD</option>
+                                <option value="DOT-USD">DOT-USD</option>
+                                <option value="BUSD-USD">BUSD-USD</option>
+                                <option value="SHIB-USD">SHIB-USD</option>
+                                <option value="AVAX-USD">AVAX-USD</option>
+                                <option value="LINK-USD">LINK-USD</option>
+                                <option value="ATOM-USD">ATOM-USD</option>
+                                <option value="UNI7083-USD">UNI-USD</option>
+                                <option value="XMR-USD">XMR-USD</option>
+                                <option value="HEX-USD">HEX-USD</option>
+                                <option value="ETC-USD">ETC-USD</option>
+                                <option value="XLM-USD">XLM-USD</option>
+                                <option value="TON11419-USD">TON-USD</option>
+                                <option value="BCH-USD">BCH-USD</option>
+                                <option value="ICP-USD">ICP-USD</option>
+                                <option value="CNX-USD">CNX-USD</option>
+                                <option value="FIL-USD">FIL-USD</option>
+                                <option value="LDO-USD">LDO-USD</option>
+                                <option value="HBAR-USD">HBAR-USD</option>
+                                <option value="APT21794-USD">APT-USD</option>
+                                <option value="CRO-USD">CRO-USD</option>
+                                <option value="ARB11841-USD">ARB-USD</option>
+                                <option value="NEAR-USD">NEAR-USD</option>
+                                <option value="VET-USD">VET-USD</option>
+                                <option value="APE18876-USD">APE-USD</option>
+                                <option value="ALGO-USD">ALGO-USD</option>
+                                <option value="GRT6719-USD">GRT-USD</option>
+                                <option value="EOS-USD">EOS-USD</option>
+                                <option value="SAND-USD">SAND-USD</option>
+                                <option value="BIT11221-USD">BIT-USD</option>
+                                <option value="AAVE-USD">AAVE-USD</option>
+                                <option value="FTM-USD">FTM-USD</option>
+                                <option value="EGLD-USD">EGLD-USD</option>
+                                <option value="RPL-USD">RPL-USD</option>
+                                <option value="CFX-USD">CFX-USD</option>
+                                <option value="MANA-USD">MANA-USD</option>
+                                <option value="THETA-USD">THETA-USD</option>
+                                <option value="STX4847-USD">STX-USD</option>
+                                <option value="XTZ-USD">XTZ-USD</option>
+                                <option value="AXS-USD">AXS-USD</option>
+                                <option value="FLOW-USD">FLOW-USD</option>
+                                <option value="KCS-USD">KCS-USD</option>
+                                <option value="CHZ-USD">CHZ-USD</option>
+                                <option value="CRV-USD">CRV-USD</option>
+                                <option value="KAVA-USD">KAVA-USD</option>
+                                <option value="NEO-USD">NEO-USD</option>
+                                <option value="XRD-USD">XRD-USD</option>
+                                <option value="IMX10603-USD">IMX-USD</option>
+                                <option value="BSV-USD">BSV-USD</option>
+                                <option value="BGB-USD">BGB-USD</option>
+                                <option value="MKR-USD">MKR-USD</option>
+                                <option value="TNC5524-USD">TNC-USD</option>
+                                <option value="KLAY-USD">KLAY-USD</option>
+                                <option value="PEPE24478-USD">PEPE-USD</option>
+                                <option value="CSPR-USD">CSPR-USD</option>
+                                <option value="BTT-USD">BTT-USD</option>
+                                <option value="MIOTA-USD">MIOTA-USD</option>
+                                <option value="OP-USD">OP-USD</option>
+                                <option value="HT-USD">HT-USD</option>
+                                <option value="ZEC-USD">ZEC-USD</option>
+                                <option value="SUI20947-USD">SUI-USD</option>
+                                <option value="INJ-USD">INJ-USD</option>
+                                <option value="PAXG-USD">PAXG-USD</option>
+                                <option value="MINA-USD">MINA-USD</option>
+                                <option value="DASH-USD">DASH-USD</option>
+                                <option value="GMX11857-USD">GMX-USD</option>
+                                <option value="GT-USD">GT-USD</option>
+                                <option value="TWT-USD">TWT-USD</option>
+                                <option value="XDC-USD">XDC-USD</option>
+                                <option value="FLR-USD">FLR-USD</option>
+                                <option value="FGC-USD">FGC-USD</option>
+                                <option value="LRC-USD">LRC-USD</option>
+                                <option value="NEXO-USD">NEXO-USD</option>
+                                <option value="AGIX-USD">AGIX-USD</option>
+                                <option value="RUNE-USD">RUNE-USD</option>
+                                <option value="WOO-USD">WOO-USD</option>
+                                <option value="ZIL-USD">ZIL-USD</option>
+                                <option value="KAS-USD">KAS-USD</option>
+                                <option value="CVX-USD">CVX-USD</option>
+                                <option value="ENJ-USD">ENJ-USD</option>
+                                <option value="FTT-USD">FTT-USD</option>
+                                <option value="BAT-USD">BAT-USD</option>
+                                <option value="1INCH-USD">1INCH-USD</option>
+                                <option value="DYDX-USD">DYDX-USD</option>
+                                <option value="MASK8536-USD">MASK-USD</option>
+                                <option value="CAKE-USD">CAKE-USD</option>
+                                <option value="FLOKI-USD">FLOKI-USD</option>
+                                <option value="ENS-USD">ENS-USD</option>
+                                <option value="ROSE-USD">ROSE-USD</option>
+                                <option value="BABYDOGE-USD">BABYDOGE-USD</option>
+                                <option value="MX-USD">MX-USD</option>
+                                <option value="GNO-USD">GNO-USD</option>
+                                <option value="OSMO-USD">OSMO-USD</option>
+                                <option value="XEM-USD">XEM-USD</option>
+                                <option value="HOT2682-USD">HOT-USD</option>
+                                <option value="QTUM-USD">QTUM-USD</option>
+                                <option value="RVN-USD">RVN-USD</option>
+                                <option value="BAL-USD">BAL-USD</option>
+                                <option value="COMP5692-USD">COMP-USD</option>
+                                <option value="CELO-USD">CELO-USD</option>
+                                <option value="XCH-USD">XCH-USD</option>
+                                <option value="AUDIO-USD">AUDIO-USD</option>
+                                <option value="ANKR-USD">ANKR-USD</option>
+                                <option value="FUEL-USD">FUEL-USD</option>
+                                <option value="DCR-USD">DCR-USD</option>
+                                <option value="LN-USD">LN-USD</option>
+                                <option value="FNSA-USD">FNSA-USD</option>
+                                <option value="BLUR-USD">BLUR-USD</option>
+                                <option value="DFI-USD">DFI-USD</option>
+                                <option value="GMT18069-USD">GMT-USD</option>
+                                <option value="ICX-USD">ICX-USD</option>
+                                <option value="SSV-USD">SSV-USD</option>
+                                <option value="JASMY-USD">JASMY-USD</option>
+                                <option value="AR-USD">AR-USD</option>
+                                <option value="BDX-USD">BDX-USD</option>
+                                <option value="OCEAN-USD">OCEAN-USD</option>
+                                <option value="SXP-USD">SXP-USD</option>
+                                <option value="ASTR-USD">ASTR-USD</option>
+                                <option value="RON14101-USD">RON-USD</option>
+                                <option value="ETHW-USD">ETHW-USD</option>
+                                <option value="BTG-USD">BTG-USD</option>
+                                <option value="KSM-USD">KSM-USD</option>
+                                <option value="GALA-USD">GALA-USD</option>
+                                <option value="YFI-USD">YFI-USD</option>
+                                <option value="FET-USD">FET-USD</option>
+                                <option value="IOTX-USD">IOTX-USD</option>
+                                <option value="EDGT-USD">EDGT-USD</option>
+                                <option value="ONE3945-USD">ONE-USD</option>
+                                <option value="GLM-USD">GLM-USD</option>
+                                <option value="WEMIX-USD">WEMIX-USD</option>
+                                <option value="JST-USD">JST-USD</option>
+                                <option value="HNT-USD">HNT-USD</option>
+                                <option value="WAVES-USD">WAVES-USD</option>
+                                <option value="MAGIC14783-USD">MAGIC-USD</option>
+                                <option value="ONT-USD">ONT-USD</option>
+                                <option value="SUSHI-USD">SUSHI-USD</option>
+                                <option value="ZRX-USD">ZRX-USD</option>
+                                <option value="DAO-USD">DAO-USD</option>
+                                <option value="BONE11865-USD">BONE-USD</option>
+                                <option value="BAND-USD">BAND-USD</option>
+                                <option value="WAXP-USD">WAXP-USD</option>
+                                <option value="GLMR-USD">GLMR-USD</option>
+                                <option value="KDA-USD">KDA-USD</option>
+                                <option value="EDU24613-USD">EDU-USD</option>
+                                <option value="ELF-USD">ELF-USD</option>
+                                <option value="IOST-USD">IOST-USD</option>
+                                <option value="HIVE-USD">HIVE-USD</option>
+                                <option value="SC-USD">SC-USD</option>
+                                <option value="LYXE-USD">LYXE-USD</option>
+                                <option value="ORDI-USD">ORDI-USD</option>
+                                <option value="ACH-USD">ACH-USD</option>
+                                <option value="ASTRAFER-USD">ASTRAFER-USD</option>
+                                <option value="XYM-USD">XYM-USD</option>
+                                <option value="BICO-USD">BICO-USD</option>
+                                <option value="POLY-USD">POLY-USD</option>
+                                <option value="CELR-USD">CELR-USD</option>
+                                <option value="BORA-USD">BORA-USD</option>
+                                <option value="ID21846-USD">ID-USD</option>
+                                <option value="SFP-USD">SFP-USD</option>
+                                <option value="RSR-USD">RSR-USD</option>
+                                <option value="TOMI23246-USD">TOMI-USD</option>
+                                <option value="GNS-USD">GNS-USD</option>
+                                <option value="TRIBE-USD">TRIBE-USD</option>
+                                <option value="ILV-USD">ILV-USD</option>
+                                <option value="BNX23635-USD">BNX-USD</option>
+                                <option value="FLUX-USD">FLUX-USD</option>
+                                <option value="UMA-USD">UMA-USD</option>
+                                <option value="SKL-USD">SKL-USD</option>
+                                <option value="LPT-USD">LPT-USD</option>
+                                <option value="CKB-USD">CKB-USD</option>
+                                <option value="ABBC-USD">ABBC-USD</option>
+                                <option value="ANT-USD">ANT-USD</option>
+                                <option value="ARPA-USD">ARPA-USD</option>
+                                <option value="MOB-USD">MOB-USD</option>
+                                <option value="STG18934-USD">STG-USD</option>
+                                <option value="CHSB-USD">CHSB-USD</option>
+                                <option value="DGB-USD">DGB-USD</option>
+                                <option value="CTSI-USD">CTSI-USD</option>
+                                <option value="AXL17799-USD">AXL-USD</option>
+                                <option value="TOMO-USD">TOMO-USD</option>
+                                <option value="JOE-USD">JOE-USD</option>
+                                <option value="LQTY-USD">LQTY-USD</option>
+                                <option value="RIF-USD">RIF-USD</option>
+                                <option value="STORJ-USD">STORJ-USD</option>
+                                <option value="ZEN-USD">ZEN-USD</option>
+                                <option value="KEEP-USD">KEEP-USD</option>
+                                <option value="BRISE-USD">BRISE-USD</option>
+                                <option value="RLC-USD">RLC-USD</option>
+                                <option value="COCOS-USD">COCOS-USD</option>
+                                <option value="ELON-USD">ELON-USD</option>
+                                <option value="AMP-USD">AMP-USD</option>
+                                <option value="CNNC-USD">CNNC-USD</option>
+                                <option value="TEL-USD">TEL-USD</option>
+                                <option value="ARAW-USD">ARAW-USD</option>
+                                <option value="ESCE-USD">ESCE-USD</option>
+                                <option value="BTRST-USD">BTRST-USD</option>
+                                <option value="OMG-USD">OMG-USD</option>
+                                <option value="VVS-USD">VVS-USD</option>
+                                <option value="KNC-USD">KNC-USD</option>
+                                <option value="LSK-USD">LSK-USD</option>
+                                <option value="CORE23254-USD">CORE-USD</option>
+                                <option value="API3-USD">API3-USD</option>
+                                <option value="NMR-USD">NMR-USD</option>
+                                <option value="NFT9816-USD">NFT-USD</option>
+                                <option value="FLEX-USD">FLEX-USD</option>
+                                <option value="PUNDIX-USD">PUNDIX-USD</option>
+                                <option value="PYR-USD">PYR-USD</option>
+                                <option value="CHR-USD">CHR-USD</option>
+                                <option value="GCR-USD">GCR-USD</option>
+                                <option value="PLA7461-USD">PLA-USD</option>
+                                <option value="RAD-USD">RAD-USD</option>
+                                <option value="C98-USD">C98-USD</option>
+                                <option value="METIS-USD">METIS-USD</option>
+                                <option value="XNO-USD">XNO-USD</option>
+                                <option value="SCRT-USD">SCRT-USD</option>
+                                <option value="MLK-USD">MLK-USD</option>
+                                <option value="POLYX-USD">POLYX-USD</option>
+                                <option value="DEL-USD">DEL-USD</option>
+                                <option value="SYS-USD">SYS-USD</option>
+                                <option value="DEXE-USD">DEXE-USD</option>
+                                <option value="SLP-USD">SLP-USD</option>
+                                <option value="MED-USD">MED-USD</option>
+                                <option value="SNT-USD">SNT-USD</option>
+                                <option value="PENDLE-USD">PENDLE-USD</option>
+                                <option value="PEOPLE-USD">PEOPLE-USD</option>
+                                <option value="ALPHA-USD">ALPHA-USD</option>
+                                <option value="WILD-USD">WILD-USD</option>
+                                <option value="HFT22461-USD">HFT-USD</option>
+                                <option value="VBG-USD">VBG-USD</option>
+                                <option value="MRS21178-USD">MRS-USD</option>
+                                <option value="GTC10052-USD">GTC-USD</option>
+                                <option value="NYM-USD">NYM-USD</option>
+                                <option value="SYN12147-USD">SYN-USD</option>
+                                <option value="CVC-USD">CVC-USD</option>
+                                <option value="MC-USD">MC-USD</option>
+                                <option value="REQ-USD">REQ-USD</option>
+                                <option value="MBOX-USD">MBOX-USD</option>
+                                <option value="HUM-USD">HUM-USD</option>
+                                <option value="DENT-USD">DENT-USD</option>
+                                <option value="NKN-USD">NKN-USD</option>
+                                <option value="ONG3217-USD">ONG-USD</option>
+                                <option value="VEGA-USD">VEGA-USD</option>
+                                <option value="COTI-USD">COTI-USD</option>
+                                <option value="STPT-USD">STPT-USD</option>
+                                <option value="RBN-USD">RBN-USD</option>
+                                <option value="ERG-USD">ERG-USD</option>
+                                <option value="XPLA-USD">XPLA-USD</option>
+                                <option value="HIGH-USD">HIGH-USD</option>
+                                <option value="LOCUS-USD">LOCUS-USD</option>
+                                <option value="STEEM-USD">STEEM-USD</option>
+                            </select>
+
+                            <br>
+                            <br>
+
+
+                            <div>
+                                <button class="btn btn-primary" type="button" onclick="addItem()">Add Symbol</button>
+                            </div>
+                            <br>
+                            <ul id="selectedItems" class="selected-items"></ul>
+                            <br>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+
+                        <!-- script to add items and remove items  -->
+
+                        <script>
+                            function addItem() {
+                                var select = document.getElementById("mySelect");
+                                var selectedOption = select.options[select.selectedIndex];
+
+                                var selectedItemText = selectedOption.text;
+                                var selectedItemValue = selectedOption.value;
+
+                                var selectedItemsList = document.getElementById("selectedItems");
+                                var listItem = document.createElement("li");
+                                listItem.className = "selected-item";
+                                listItem.innerHTML = selectedItemText;
+
+                                var removeButton = document.createElement("button");
+                                removeButton.type = "button";
+                                removeButton.className = "btn btn-danger"; 
+                                removeButton.innerHTML = "Remove";
+                                removeButton.addEventListener("click", function () {
+                                    listItem.remove();
+                                });
+
+                                listItem.appendChild(removeButton);
+                                selectedItemsList.appendChild(listItem);
+
+                                // Append the selected item value to a hidden input field for Django form submission
+                                var hiddenInput = document.createElement("input");
+                                hiddenInput.type = "hidden";
+                                hiddenInput.name = "selected_items";
+                                hiddenInput.value = selectedItemValue;
+                                document.getElementById("myForm").appendChild(hiddenInput);
+
+                                // Sort the select options alphabetically
+                                var options = Array.from(select.options);
+                                options.sort(function (a, b) {
+                                    return a.text.localeCompare(b.text);
+                                });
+
+                                for (var i = 0; i < options.length; i++) {
+                                    select.appendChild(options[i]);
+                                }
+                            }
+                        </script>
+
+                        <!-- Script to arrange options in alphabatical  order -->
+                        <script>
+                            // Get the select element
+                            const selectElement = document.getElementById("mySelect");
+
+                            // Get all the option elements
+                            const optionElements = selectElement.getElementsByTagName("option");
+
+                            // Convert the option elements to an array
+                            const optionsArray = Array.from(optionElements);
+
+                            // Sort the array based on the text content of the options
+                            optionsArray.sort((a, b) => a.textContent.localeCompare(b.textContent));
+
+                            // Remove existing options from the select element
+                            while (selectElement.firstChild) {
+                                selectElement.firstChild.remove();
+                            }
+
+                            // Add the sorted options back to the select element
+                            for (const option of optionsArray) {
+                                selectElement.appendChild(option);
+                            }
+
+                        </script>
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <br>
+                
+                        <h3 style="color: cornflowerblue">Results: Weights for symbols and potential performance</h3>
+                        <h5 style="color: cornflowerblue">Model:{{optimisation_type}}</h5>
+                        <br>
+                        
+                        <section class="container-lg">
+                            <table class="table table-bordered">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>Symbol</th>
+                                        <th>Weight in percent %</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for symbol, weight in data_weights.value.items %}
+                                    <tr>
+                                        <td>{{ symbol }}</td>
+                                        <td>{{ weight|floatformat:2 }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <br>
+
+                            <table class="table table-bordered">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>Performance</th>
+                                        <th>Value in % (except sharpe ratio)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for performance, value in data_performance.items %}
+                                    <tr>
+                                        <td>{{ performance }}</td>
+                                        <td>{{ value|floatformat:2 }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+
+
+                        </section>
+
+                    </div>
+                </div>
+            
+        </div>
+    </div>
+
+
+
+
+
+
+</main>
+
+{% endblock body %}

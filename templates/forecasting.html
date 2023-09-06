@@ -1,0 +1,186 @@
+{% extends 'base.html' %} {% block Title %}
+
+<title>Forecasting</title>
+
+{% endblock Title %} {% block body %}
+
+<main id="main" class="main">
+  <div class="container-fluid">
+  <div class="card" style="width:auto ">
+    <div class="text-md-center" style="margin-top: 20px">
+      <h2 style="color: cornflowerblue"><b>Forecasting playground</b></h2>
+      <br />
+    </div>
+  </div>
+</div>
+
+<script>
+  // Put the code snippet here
+  var csrfToken = Cookies.get('csrftoken');
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/forecasting', true);
+  xhr.setRequestHeader('X-CSRFToken', csrfToken);
+  xhr.send();
+</script>
+
+  {% load cache %} {% cache 60000 forecasted x_axis_values len_null%}
+
+  <section class="container-fluid">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Forecasting</h5>
+          <h5 class="text-center"><b>{{symbol}}</b></h5>
+
+          <!-- Line Chart -->
+          <div id="lineChart"></div>
+
+          <script>
+              const arr = new Array({{ len_null }}).fill(null);
+              const additionalValues = {{ forecasted }};
+              const result = arr.concat(additionalValues);
+              var x_axis = {{ x_axis_values| safe}};
+              document.addEventListener("DOMContentLoaded", () => {
+                new ApexCharts(document.querySelector("#lineChart"), {
+                  series: [{
+                    name: "Historical Data",
+                    data: {{ present }}
+                  },
+                {
+                  name: "Forecasted",
+                  data: result
+                }
+
+
+                ],
+                chart: {
+                height: 450,
+                type: 'line',
+                zoom: {
+                  enabled: true
+                }
+              },
+                dataLabels: {
+                enabled: false
+              },
+                stroke: {
+                curve: 'straight'
+              },
+                grid: {
+                row: {
+                  colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                  opacity: 0.5
+                },
+              },
+                xaxis: {
+                categories: x_axis,
+                tickAmount: 10
+              }
+              }).render();
+            });
+          </script>
+          <!-- End Line Chart -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% endcache %}
+
+  <section class="container-fluid">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Forecasting</h5>
+
+          <form method="post">
+            {% csrf_token %}
+            <div>
+              Symbol:
+              <select name="symbol" id="symbol_user_input">
+                <option value="ada">ADA</option>
+                <option value="bnb">BNB</option>
+                <option value="eth">ETH</option>
+                <option value="matic">MATIC</option>
+                <option value="ltc">LTC</option>
+              </select>
+              &nbsp;
+              Exchange:
+              <select name="exchange" id="exchange">
+                <option value="binance">BINANCE</option>
+                <option value="bybit">BYBIT</option>
+              </select>
+              &nbsp;
+              Forecasting model:
+              <select name="forecast_type">
+                <option value="rnn">Recurrent Neural Network</option>
+                <option value="brnn">Block Recurrent Neural Network</option>
+                <option value="expo">Probabilistic Exponential Smoothing</option>
+                <option value="seasonalnaive">Seasonal Naive Model</option>
+              </select>
+              &nbsp;
+              <input type="submit"  onclick="this.form.submit();this.disabled = true;" value="Submit" id="submitBtn" />
+            </div>
+          </form>
+          
+        
+          
+          <br>
+          
+          <h5 class="text-center"><b>{{symbol_user}} &nbsp; MODEL: {{forecast_type}}</b></h5>
+          
+
+          <!-- Line Chart -->
+          <div id="lineChartuser"></div>
+          <script>
+              const arr_user = new Array({{ len_null_user }}).fill(null);
+              const additionalValues_user = {{ forecasted_user }};
+              const result_user = arr_user.concat(additionalValues_user);
+              var x_axis_user = {{ x_axis_values_user| safe}};
+              document.addEventListener("DOMContentLoaded", () => {
+                new ApexCharts(document.querySelector("#lineChartuser"), {
+                  series: [{
+                    name: "Historical Data",
+                    data: {{ present_user }}
+                  },
+                {
+                  name: "Forecasted",
+                  data: result_user
+                }
+
+
+                ],
+                chart: {
+                height: 450,
+                type: 'line',
+                zoom: {
+                  enabled: true
+                }
+              },
+                dataLabels: {
+                enabled: false
+              },
+                stroke: {
+                curve: 'straight'
+              },
+                grid: {
+                row: {
+                  colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                  opacity: 0.5
+                },
+              },
+                xaxis: {
+                categories: x_axis_user,
+                tickAmount: 10
+              }
+              }).render();
+            });
+          </script>
+          <!-- End Line Chart -->
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+{% endblock body %}

@@ -1,0 +1,340 @@
+{% extends 'base.html' %}
+
+{% block Title %}
+
+<title>Funds</title>
+
+{% endblock Title %}
+
+{% block body %}
+
+<main id="main" class="main">
+    <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+        table.dataTable thead .sorting:after,
+        table.dataTable thead .sorting:before,
+        table.dataTable thead .sorting_asc:after,
+        table.dataTable thead .sorting_asc:before,
+        table.dataTable thead .sorting_asc_disabled:after,
+        table.dataTable thead .sorting_asc_disabled:before,
+        table.dataTable thead .sorting_desc:after,
+        table.dataTable thead .sorting_desc:before,
+        table.dataTable thead .sorting_desc_disabled:after,
+        table.dataTable thead .sorting_desc_disabled:before {
+            bottom: .5em;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $('#dtOrderExample').DataTable({
+                "order": [[2, "desc"]]
+            });
+            $('.dataTables_length').addClass('bs-select');
+        });
+    </script>
+
+    <div class="card">
+        <div class="text-md-center" style="margin-top: 20px;">
+            <h5 style="color:cornflowerblue;"> <b>Funds Activity Dashboard</b> </h5><br>
+        </div>
+    </div>
+
+
+
+    <!-- table starts -->
+
+    <section>
+
+        <div class="card">
+
+            <p class="text-md-center" style="color:cornflowerblue;">Live data updates every <b>T+1</b> days 
+            </p>
+
+            <div class="overflow-auto" style="height: 450px; overflow-y: scroll;">
+                <table id="dtOrderExample" class="table table-bordered">
+
+                    <thead class="table-primary">
+                        <tr>
+
+                            <th scope="col">Name</th>
+                            <th scope="col">Symbol</th>
+                            <th scope="col">Amount Usd</th>
+                            <th scope="col">Token Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, vc in VCs.items %}
+                        <tr>
+                            <td>{{ vc.name }}</td>
+                            <td>{{ vc.symbol }}</td>
+                            <td>{{ vc.amount_usd }}</td>
+                            <td>{{ vc.token_bought_address }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- table ends -->
+
+    <br>
+
+    <!-- donut charts for funds' holding -->
+    <section class="container-fluid">
+        <div class='row'>
+            
+            <div class='col-lg-6'>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Funds Holdings</h5>
+
+                        <!-- Donut Chart -->
+                        <div id="donutChart"></div>
+
+                        <script>
+
+                            document.addEventListener("DOMContentLoaded", () => {
+                                new ApexCharts(document.querySelector("#donutChart"), {
+                                    series: {{ amount }},
+                                chart: {
+                                height: 290,
+                                type: 'donut',
+                                toolbar: {
+                                    show: true
+                                }
+                            },
+                                labels: {{ token_symbol| safe}},
+                    }).render();
+                  });
+                        </script>
+                        <!-- End Donut Chart -->
+
+                    </div>
+                </div>
+            </div>
+            
+ 
+            <div class='col-lg-6'>
+                <div class="card">
+                    <div class="card-body" style="height: 400px;">
+                        <h5 class="card-title">Funds Buying Activity</h5>
+                        <!-- Bar Chart -->
+                        <canvas id="barChartvc" style="max-height: 300px;"></canvas>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", () => {
+                                new Chart(document.querySelector('#barChartvc'), {
+                                    type: 'bar',
+                                    data: {
+                                        labels: {{ name_vc| safe}},
+                                datasets: [{
+                                    label: 'Bar Chart',
+                                    data: {{ amount_vc }},
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)',
+                                    'rgba(255, 205, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(201, 203, 207, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgb(255, 99, 132)',
+                                    'rgb(255, 159, 64)',
+                                    'rgb(255, 205, 86)',
+                                    'rgb(75, 192, 192)',
+                                    'rgb(54, 162, 235)',
+                                    'rgb(153, 102, 255)',
+                                    'rgb(201, 203, 207)'
+                                ],
+                                borderWidth: 1
+                                }]
+                            },
+                                options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        title: {
+                                            display: true,
+                                            text: 'Amount USD'
+                                        }
+                                    },
+                                    x: {
+                                        title: {
+                                            display: true,
+                                            text: 'Fund names'
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    });
+                        </script>
+                        <!-- End Bar Chart -->
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+
+
+    <!-- table for VCs  in / out start here  -->
+
+    <section>
+        <div class="card">
+            <div class="text-md-center" style="margin-top: 20px;">
+                <h5 style="color:cornflowerblue;"> <b>Funds Movements </b> </h5><br>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('#dtOrderExampleVCinout').DataTable({
+                    "order": [[2, "desc"]]
+                });
+                $('.dataTables_length').addClass('bs-select');
+            });
+        </script>
+
+        <section class="container-fluid">
+
+
+            <div class="card">
+
+                <p class="text-md-center" style="color:cornflowerblue;">Live data updates every <b>T+1</b> days 
+                </p>
+
+                <div class="overflow-auto" style="height: 450px; overflow-y: scroll;">
+                    <table id="dtOrderExampleVCinout" class="table table-bordered">
+
+                        <thead class="table-primary">
+                            <tr>
+
+                                <th scope="col">Name</th>
+                                <th scope="col">Symbol</th>
+                                <th scope="col">Amount Usd</th>
+                                <th scope="col">Situation</th>
+                                <th scope="col">Hash</th>
+                                <th scope="col">Event Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, vc in VCs_sit.items %}
+                            <tr>
+                                <td>{{ vc.wallet_name|safe }}</td>
+                                <td>{{ vc.token|safe }}</td>
+                                <td>{{ vc.Total_usd }}</td>
+                                <td>{{ vc.situation|safe }}</td>
+                                <td>{{ vc.evt_tx_hash|safe }}</td>
+                                <td>{{ vc.event_time|safe }}</td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </section>
+    </section>
+
+
+    <!-- table ends here  -->
+
+    <!-- vc raise  table starts here csv  -->
+    <section>
+        <div class="card">
+            <div class="text-md-center" style="margin-top: 20px;">
+                <h5 style="color:cornflowerblue;"> <b>Active Projects Investments By Funds</b>
+                </h5><br>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('#dtOrderExample2').DataTable({
+                    "order": [[2, "desc"]]
+                });
+                $('.dataTables_length').addClass('bs-select');
+            });
+        </script>
+
+        <section class='container-fluid'>
+
+            <div class="card">
+
+
+                <div class="overflow-auto" style="height: 450px; overflow-y: scroll;">
+                    <table id="dtOrderExample2" class="table table-bordered">
+
+                        <thead class="table-primary">
+                            <tr>
+
+                                <th scope="col">Project Name</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Amount raised</th>
+                                <th scope="col">Round</th>
+                                <th scope="col">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for key, raises in raises_vc.items%}
+
+                            <tr>
+                                <td>{{ raises.name }}</td>
+                                <td>{{ raises.date}}</td>
+                                <td>{{ raises.amount|safe}}</td>
+                                <td>{{ raises.round_no}}</td>
+                                <td>{{ raises.description }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </section>
+    </section>
+    <!-- vc raises table ends here  -->
+
+
+    <!-- latest fund news  raises  -->
+    <section class="container-fluid">
+        <div class="card" style="height: fit-content">
+            <div class="card-body">
+                <div class="text-md-center">
+                    <h4 class="card-title bg-primary-light">
+                        Latest Funds' Raising News !!! &#x2615;
+                    </h4>
+                </div>
+
+                <!-- List group With Contextual classes -->
+                <ul class="row">
+                    {% for news in content_df_raises_list %}
+                    <li>
+                        {{news}}
+                    </li>
+                    {% endfor %}
+                </ul>
+                <!-- End  NEWS SECTION -->
+            </div>
+        </div>
+    </section>
+    <!-- fund news end here -->
+
+
+</main>
+
+{% endblock body %}

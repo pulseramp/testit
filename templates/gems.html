@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  <title>Degen gems</title>
+{% endblock title %}
+
+
+{% block body %}
+
+<main id="main" class="main">
+    <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
+    <style>
+        table.dataTable thead .sorting:after,
+        table.dataTable thead .sorting:before,
+        table.dataTable thead .sorting_asc:after,
+        table.dataTable thead .sorting_asc:before,
+        table.dataTable thead .sorting_asc_disabled:after,
+        table.dataTable thead .sorting_asc_disabled:before,
+        table.dataTable thead .sorting_desc:after,
+        table.dataTable thead .sorting_desc:before,
+        table.dataTable thead .sorting_desc_disabled:after,
+        table.dataTable thead .sorting_desc_disabled:before {
+            bottom: .5em;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $('#dtOrderExample').DataTable({
+                "order": [[2, "desc"]]
+            });
+            $('.dataTables_length').addClass('bs-select');
+        });
+    </script>
+
+    <div class="card">
+        <div class="text-md-center" style="margin-top: 20px;">
+            <h2 style="color:cornflowerblue;"> <b>Gems Degen Playground</b> </h2><br>
+        </div>
+    </div>
+
+
+
+    <!-- table start here  -->
+    <section class='container-fluid'>
+
+        <div class="card">
+            <p class="text-md-center" style="color:cornflowerblue;">Live data updates every <b>4</b> hours <b></b>
+            </p>
+
+            <div class="table-responsive" style="height: 550px; overflow-y: scroll;">
+                <table id="dtOrderExample" class="table  table-bordered">
+
+
+                    <thead class="table-primary">
+                        <tr>
+
+                            <th scope="col">Blockchain</th>
+                            <th scope="col">Token pair</th>
+                            <th scope="col">Amount USD</th>
+                            <th scope="col">From address </th>
+                            <th scope="col">Buy pairA</th>
+                            <th scope="col">Buy pairB</th>
+                            <th scope="col">Total TX</th>
+                            <th scope="col">Token A</th>
+                            <th scope="col">Token B</th>
+                            <th scope="col">Last Traded</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, value in dict_values_gems.items %}
+
+
+                        <tr>
+
+                            <td>{{value.blockchain}}</td>
+                            <td>{{value.token_pair}}</td>
+                            <td>{{value.amount_usd}}</td>
+                            <td>{{value.num_of_from_address}}</td>
+                            <td>{{value.buy_pairA_count}}</td>
+                            <td>{{value.buy_pairB_count}}</td>
+                            <td>{{value.total_txs}}</td>
+                            <td>{{value.token_1}}</td>
+                            <td>{{value.token_2}}</td>
+                            <td>{{value.last_trade}}</td>
+
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+            </div>
+            <br>
+    </section>
+
+    <br>
+
+
+
+    <!-- pie chart start here  -->
+    <section>
+        <div class="row">
+
+ 
+             <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Most Traded token (USD)</h5>
+
+                    
+                    <div id="donutChart"></div>
+
+                    <script>
+                        document.addEventListener("DOMContentLoaded", () => {
+
+                            new ApexCharts(document.querySelector("#donutChart"), {
+                                series: {{ pie_chart_value }},
+                            chart: {
+                            height: 350,
+                            type: 'donut',
+                            toolbar: {
+                                show: true
+                            }
+                        },
+                            labels: {{ pie_chart_name| safe}},
+                  }).render();
+                });
+                    </script>
+                  
+
+                </div>
+            </div>
+
+
+
+
+    </section>
+
+
+
+
+
+
+    <section>
+
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Most Mentioned Gems on Telegram</h5>
+                <!-- Bar Chart -->
+                <canvas id="barChartETH" style="max-height: 400px;"></canvas>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        new Chart(document.querySelector('#barChartETH'), {
+                            type: 'bar',
+                            data: {
+                                labels: {{ name_degen| safe}},
+                        datasets: [{
+                            //label: 'Bar Chart',
+                            data: {{ counts_degen }},
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 205, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(201, 203, 207, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgb(255, 99, 132)',
+                            'rgb(255, 159, 64)',
+                            'rgb(255, 205, 86)',
+                            'rgb(75, 192, 192)',
+                            'rgb(54, 162, 235)',
+                            'rgb(153, 102, 255)',
+                            'rgb(201, 203, 207)'
+                        ],
+                        borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        title: {
+                                            display: true,
+                                            text: 'Times mentioned on degen channels'
+                                        }
+                                    },
+                                    x: {
+                                        title: {
+                                            display: true,
+                                            text: 'Token names'}
+                                        }
+                        }}
+                        });
+                    });
+                </script>
+                <!-- End Bar Chart -->
+            </div>
+        </div>
+
+
+    </section>
+
+
+            <!-- table for nfts start here -->
+            <section>
+                <div class="card">
+                    <div class="text-md-center" style="margin-top: 20px;">
+                        <h5 style="color:cornflowerblue;"> <b>Top NFTs trader holdings </b> </h5><br>
+                    </div>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        $('#dtOrderExamplenfts').DataTable({
+                            "order": [[1, "desc"]]
+                        });
+                        $('.dataTables_length').addClass('bs-select');
+                    });
+                </script>
+        
+                <section class="container-fluid">
+        
+        
+                    <div class="card">
+        
+                        <p class="text-md-center" style="color:cornflowerblue;">Updates every T+1 days <b></b>
+                        </p>
+        
+                        <div class="overflow-auto" style="height: 450px; overflow-y: scroll;">
+                            <table id="dtOrderExamplenfts" class="table table-bordered">
+        
+                                <thead class="table-primary">
+                                    <tr>
+        
+                                        <th scope="col">Blockchain</th>
+                                        <th scope="col">Wallet Address</th>
+                                        <th scope="col">Token ID</th>
+                                        <th scope="col">Collection</th>
+                                        <th scope="col">Time UTC</th>
+                                       
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for key, nft in dict_values_nfts.items %}
+                                    <tr>
+                                        <td>{{ nft.blockchain|safe }}</td>
+                                        <td>{{ nft.wallet_address|safe }}</td>
+                                        <td>{{ nft.tokenId }}</td>
+                                        <td>{{ nft.collection|safe }}</td>
+                                        <td>{{ nft.updated_at|safe }}</td>
+                                      
+        
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+        
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </section>
+        <!-- bar chart start here -->
+
+
+</main>
+{% endblock body %}

@@ -1,0 +1,786 @@
+{% extends 'base.html' %} {% block Title %}
+
+<title>Macroeconomics</title>
+
+{% endblock Title %}  
+
+{% block body %}
+
+<main id="main" class="main">
+    <div class="card">
+        <div class="text-md-center" style="margin-top: 20px">
+            <h4 style="color: cornflowerblue"><b>Macroeconomic dashboard</b></h4>
+            <br />
+        </div>
+    </div>
+
+    <div>
+        <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css"
+            rel="stylesheet" />
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <style>
+            table.dataTable thead .sorting:after,
+            table.dataTable thead .sorting:before,
+            table.dataTable thead .sorting_asc:after,
+            table.dataTable thead .sorting_asc:before,
+            table.dataTable thead .sorting_asc_disabled:after,
+            table.dataTable thead .sorting_asc_disabled:before,
+            table.dataTable thead .sorting_desc:after,
+            table.dataTable thead .sorting_desc:before,
+            table.dataTable thead .sorting_desc_disabled:after,
+            table.dataTable thead .sorting_desc_disabled:before {
+                bottom: 0.5em;
+            }
+        </style>
+
+
+        <section>
+
+
+            <div class="row">
+
+
+                <!-- crypto index  chart start here -->
+
+                <div class="col-lg-8">
+                    <div class="card" style>
+                        <div class="card-body">
+                            <h5 class="card-title">Crypto index top 200</h5>
+
+                            <!-- Line Chart -->
+                            <div id="lineChart_crypto_index"></div>
+
+                            <script>
+
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    new ApexCharts(document.querySelector("#lineChart_crypto_index"), {
+                                        series: [{
+                                            name: "Historical Data",
+                                            data: {{ value_crypto }}
+                               }],
+                                    chart: {
+                                    height: 250,
+                                    type: 'line',
+                                    zoom: {
+                                        enabled: true
+                                    }
+                                },
+                                    dataLabels: {
+                                    enabled: true,
+                                    enabledOnSeries: [0], // Enable data labels only for the first series
+                                    formatter: function (val, { seriesIndex, dataPointIndex, w }) {
+                                        // Display data label only for the last data point
+                                        if (dataPointIndex === w.globals.series[seriesIndex].length - 1) {
+                                            return val;
+                                        } else {
+                                            return "";
+                                        }
+                                    },
+                                    offsetX: -10,
+                                    offsetY: -5, // Offset the label above the data point
+                                    style: {
+                                        fontSize: '15px',
+                                        fontWeight: 'bold',
+                                        colors: ["#439af2"] // Color of the label
+                                    }, placement: 'below',
+                                },
+                                    stroke: {
+                                    curve: 'straight'
+                                },
+                                    grid: {
+                                    row: {
+                                        colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                                        opacity: 0.5
+                                    },
+                                },
+                                    xaxis: {
+                                    categories: {{ date_crypto| safe}},
+                                    labels: {
+                                    show: true,
+                                    rotate: -45, // Rotate x-axis labels for better readability
+                                    rotateAlways: true,
+                                    style: {
+                                        fontSize: '10px',
+                                        fontWeight: 'bold'
+                                    }
+                                },
+                                    title: {
+                                    text: "Date",
+                                    style: {
+                                        fontSize: '12px',
+                                        fontWeight: 'bold'
+                                    }
+                                }, tickAmount: 10
+              },
+                                    yaxis: {
+                                    labels: {
+                                        show: true,
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    },
+                                    title: {
+                                        text: "Price",
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    }
+                                }
+                  }).render();
+              });
+                            </script>
+                            <!-- End Line Chart -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- crypto index  chart end here -->
+
+                <!-- Unemployment chart start here  -->
+
+                <div class="col-lg-4">
+                    <div class="card" style>
+                        <div class="card-body">
+                            <h5 class="card-title">Unemployment rate</h5>
+
+                            <!-- Line Chart -->
+                            <div id="lineChart"></div>
+
+                            <script>
+                                var x_axis = {{ date_core| safe}};
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    new ApexCharts(document.querySelector("#lineChart"), {
+                                        series: [{
+                                            name: "Historical Data",
+                                            data: {{ value_core }}
+                           }],
+                                    chart: {
+                                    height: 250,
+                                    type: 'line',
+                                    zoom: {
+                                        enabled: true
+                                    }
+                                },
+                                    dataLabels: {
+                                    enabled: true,
+                                    enabledOnSeries: [0], // Enable data labels only for the first series
+                                    formatter: function (val, { seriesIndex, dataPointIndex, w }) {
+                                        // Display data label only for the last data point
+                                        if (dataPointIndex === w.globals.series[seriesIndex].length - 1) {
+                                            return val;
+                                        } else {
+                                            return "";
+                                        }
+                                    },
+                                    offsetX: -10,
+                                    offsetY: -5, // Offset the label above the data point
+                                    style: {
+                                        fontSize: '15px',
+                                        fontWeight: 'bold',
+                                        colors: ["#439af2"] // Color of the label
+                                    }, placement: 'below',
+                                },
+                                    stroke: {
+                                    curve: 'straight'
+                                },
+                                    grid: {
+                                    row: {
+                                        colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                                        opacity: 0.5
+                                    },
+                                },
+                                    xaxis: {
+                                    categories: x_axis,
+                                    labels: {
+                                        show: true,
+                                        rotate: -45, // Rotate x-axis labels for better readability
+                                        rotateAlways: true,
+                                        style: {
+                                            fontSize: '10px',
+                                            fontWeight: 'bold'
+                                        }
+                                    },
+                                    title: {
+                                        text: "Date",
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    }, tickAmount: 8
+                                },
+                                    yaxis: {
+                                    labels: {
+                                        show: true,
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    },
+                                    title: {
+                                        text: "Percent %",
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    }
+                                }
+                  }).render();
+              });
+                            </script>
+                            <!-- End Line Chart -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Unemployment chart end here  -->
+
+                <!-- stock index  chart start here -->
+                <div class="col-lg-8">
+                    <div class="card" style>
+                        <div class="card-body">
+                            <h5 class="card-title">S&P 500 index</h5>
+
+                            <!-- Line Chart -->
+                            <div id="lineChart_sp400_index"></div>
+
+                            <script>
+
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    new ApexCharts(document.querySelector("#lineChart_sp400_index"), {
+                                        series: [{
+                                            name: "Historical Data",
+                                            data: {{ value_sp400 }}
+                               }],
+                                    chart: {
+                                    height: 250,
+                                    type: 'line',
+                                    zoom: {
+                                        enabled: true
+                                    }
+                                },
+                                    dataLabels: {
+                                    enabled: true,
+                                    enabledOnSeries: [0], // Enable data labels only for the first series
+                                    formatter: function (val, { seriesIndex, dataPointIndex, w }) {
+                                        // Display data label only for the last data point
+                                        if (dataPointIndex === w.globals.series[seriesIndex].length - 1) {
+                                            return val;
+                                        } else {
+                                            return "";
+                                        }
+                                    },
+                                    offsetX: -10,
+                                    offsetY: -5, // Offset the label above the data point
+                                    style: {
+                                        fontSize: '15px',
+                                        fontWeight: 'bold',
+                                        colors: ["#439af2"] // Color of the label
+                                    }, placement: 'below',
+                                },
+                                    stroke: {
+                                    curve: 'straight'
+                                },
+                                    grid: {
+                                    row: {
+                                        colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                                        opacity: 0.5
+                                    },
+                                },
+                                    xaxis: {
+                                    categories: {{ date_sp400| safe}},
+                                    labels: {
+                                    show: true,
+                                    rotate: -45, // Rotate x-axis labels for better readability
+                                    rotateAlways: true,
+                                    style: {
+                                        fontSize: '10px',
+                                        fontWeight: 'bold'
+                                    }
+                                },
+                                    title: {
+                                    text: "Date",
+                                    style: {
+                                        fontSize: '12px',
+                                        fontWeight: 'bold'
+                                    }
+                                }, tickAmount: 10
+              },
+                                    yaxis: {
+                                    labels: {
+                                        show: true,
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    },
+                                    title: {
+                                        text: "Price",
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    }
+                                }
+                  }).render();
+              });
+                            </script>
+                            <!-- End Line Chart -->
+                        </div>
+                    </div>
+                </div>
+                <!-- stock index  chart end here -->
+
+
+                <!-- housing chart start here  -->
+
+                <div class="col-lg-4">
+                    <div class="card" style>
+                        <div class="card-body">
+                            <h5 class="card-title">Housing price index</h5>
+
+                            <!-- Line Chart -->
+                            <div id="lineChart_1"></div>
+
+                            <script>
+                                var x_axis = {{ date_housing| safe}};
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    new ApexCharts(document.querySelector("#lineChart_1"), {
+                                        series: [{
+                                            name: "Historical Data",
+                                            data: {{ value_housing }}
+                           }],
+                                    chart: {
+                                    height: 250,
+                                    type: 'line',
+                                    zoom: {
+                                        enabled: true
+                                    }
+                                },
+                                    dataLabels: {
+                                    enabled: true,
+                                    enabledOnSeries: [0], // Enable data labels only for the first series
+                                    formatter: function (val, { seriesIndex, dataPointIndex, w }) {
+                                        // Display data label only for the last data point
+                                        if (dataPointIndex === w.globals.series[seriesIndex].length - 1) {
+                                            return val;
+                                        } else {
+                                            return "";
+                                        }
+                                    },
+                                    offsetX: -10,
+                                    offsetY: -5, // Offset the label above the data point
+                                    style: {
+                                        fontSize: '15px',
+                                        fontWeight: 'bold',
+                                        colors: ["#439af2"] // Color of the label
+                                    }, placement: 'below',
+                                },
+                                    stroke: {
+                                    curve: 'straight'
+                                },
+                                    grid: {
+                                    row: {
+                                        colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                                        opacity: 0.5
+                                    },
+                                },
+                                    xaxis: {
+                                    categories: x_axis,
+                                    labels: {
+                                        show: true,
+                                        rotate: -45, // Rotate x-axis labels for better readability
+                                        rotateAlways: true,
+                                        style: {
+                                            fontSize: '10px',
+                                            fontWeight: 'bold'
+                                        }
+                                    },
+                                    title: {
+                                        text: "Date",
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    }, tickAmount: 8
+                                },
+                                    yaxis: {
+                                    labels: {
+                                        show: true,
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    },
+                                    title: {
+                                        text: "Price",
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    }
+                                }
+                  }).render();
+              });
+                            </script>
+                            <!-- End Line Chart -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- housing chart end here  -->
+
+
+                <!-- Gdbet chart start here  -->
+
+                <div class="col-lg-4">
+                    <div class="card" style>
+                        <div class="card-body">
+                            <h5 class="card-title">Government debt</h5>
+
+                            <!-- Line Chart -->
+                            <div id="lineChart_2"></div>
+
+                            <script>
+                                var x_axis = {{ date_gdebt| safe}};
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    new ApexCharts(document.querySelector("#lineChart_2"), {
+                                        series: [{
+                                            name: "Historical Data",
+                                            data: {{ value_gdebt }}
+                           }],
+                                    chart: {
+                                    height: 250,
+                                    type: 'line',
+                                    zoom: {
+                                        enabled: true
+                                    }
+                                },
+                                    dataLabels: {
+                                    enabled: true,
+                                    enabledOnSeries: [0], // Enable data labels only for the first series
+                                    formatter: function (val, { seriesIndex, dataPointIndex, w }) {
+                                        // Display data label only for the last data point
+                                        if (dataPointIndex === w.globals.series[seriesIndex].length - 1) {
+                                            return val;
+                                        } else {
+                                            return "";
+                                        }
+                                    },
+                                    offsetX: -10,
+                                    offsetY: -5, // Offset the label above the data point
+                                    style: {
+                                        fontSize: '15px',
+                                        fontWeight: 'bold',
+                                        colors: ["#439af2"] // Color of the label
+                                    }, placement: 'below',
+                                },
+                                    stroke: {
+                                    curve: 'straight'
+                                },
+                                    grid: {
+                                    row: {
+                                        colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                                        opacity: 0.5
+                                    },
+                                },
+                                    xaxis: {
+                                    categories: x_axis,
+                                    labels: {
+                                        show: true,
+                                        rotate: -45, // Rotate x-axis labels for better readability
+                                        rotateAlways: true,
+                                        style: {
+                                            fontSize: '10px',
+                                            fontWeight: 'bold'
+                                        }
+                                    },
+                                    title: {
+                                        text: "Date",
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    }, tickAmount: 8
+                                },
+                                    yaxis: {
+                                    labels: {
+                                        show: true,
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    },
+                                    title: {
+                                        text: "Trillion USD",
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    }
+                                }
+                  }).render();
+              });
+                            </script>
+                            <!-- End Line Chart -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gdebt chart end here  -->
+
+
+
+                <!-- 10 year Treasury chart start here  -->
+
+                <div class="col-lg-4">
+                    <div class="card" style>
+                        <div class="card-body">
+                            <h5 class="card-title">10 year treasury</h5>
+
+                            <!-- Line Chart -->
+                            <div id="lineChart_3"></div>
+
+                            <script>
+                                var x_axis = {{ date_treasury_10| safe}};
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    new ApexCharts(document.querySelector("#lineChart_3"), {
+                                        series: [{
+                                            name: "Historical Data",
+                                            data: {{ value_treasury_10 }}
+                           }],
+                                    chart: {
+                                    height: 250,
+                                    type: 'line',
+                                    zoom: {
+                                        enabled: true
+                                    }
+                                },
+                                    dataLabels: {
+                                    enabled: true,
+                                    enabledOnSeries: [0], // Enable data labels only for the first series
+                                    formatter: function (val, { seriesIndex, dataPointIndex, w }) {
+                                        // Display data label only for the last data point
+                                        if (dataPointIndex === w.globals.series[seriesIndex].length - 1) {
+                                            return val;
+                                        } else {
+                                            return "";
+                                        }
+                                    },
+                                    offsetX: -10,
+                                    offsetY: -5, // Offset the label above the data point
+                                    style: {
+                                        fontSize: '15px',
+                                        fontWeight: 'bold',
+                                        colors: ["#439af2"] // Color of the label
+                                    }, placement: 'below',
+                                },
+                                    stroke: {
+                                    curve: 'straight'
+                                },
+                                    grid: {
+                                    row: {
+                                        colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                                        opacity: 0.5
+                                    },
+                                },
+                                    xaxis: {
+                                    categories: x_axis,
+                                    labels: {
+                                        show: true,
+                                        rotate: -45, // Rotate x-axis labels for better readability
+                                        rotateAlways: true,
+                                        style: {
+                                            fontSize: '10px',
+                                            fontWeight: 'bold'
+                                        }
+                                    },
+                                    title: {
+                                        text: "Date",
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    }, tickAmount: 8
+                                },
+                                    yaxis: {
+                                    labels: {
+                                        show: true,
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    },
+                                    title: {
+                                        text: "Percent %",
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    }
+                                }
+                  }).render();
+              });
+                            </script>
+                            <!-- End Line Chart -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10 year Treasury chart end here  -->
+
+                <!-- <div class="col-lg-4">
+            <div class="card" style>
+                <div class="card-body">
+                    <h5 class="card-title">Industrial Production</h5>
+
+                    
+                    <div id="lineChart_4"></div>
+
+                    <script>
+                        var x_axis = {{ date_Iprod| safe}};
+                        document.addEventListener("DOMContentLoaded", () => {
+                            new ApexCharts(document.querySelector("#lineChart_4"), {
+                                series: [{
+                                    name: "Historical Data",
+                                    data: {{ value_Iprod }}
+                                         }],
+                            chart: {
+                            height: 250,
+                            type: 'line',
+                            zoom: {
+                                enabled: false
+                            }
+                        },
+                            dataLabels: {
+                            enabled: false
+                        },
+                            stroke: {
+                            curve: 'straight'
+                        },
+                            grid: {
+                            row: {
+                                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                                opacity: 0.5
+                            },
+                        },
+                            xaxis: {
+                            categories: x_axis,
+                        }
+            }).render();
+          });
+                    </script>
+                    
+                </div>
+            </div>
+        </div> -->
+
+
+                <!-- Oil production chart start here  -->
+                <div class="col-lg-4">
+                    <div class="card" style>
+                        <div class="card-body">
+                            <h5 class="card-title">Oil production</h5>
+
+                            <!-- Line Chart -->
+                            <div id="lineChart_4"></div>
+
+                            <script>
+                                var x_axis = {{ date_oilprod | safe}};
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    new ApexCharts(document.querySelector("#lineChart_4"), {
+                                        series: [{
+                                            name: "Historical Data",
+                                            data: {{ value_oilprod }}
+                           }],
+                                    chart: {
+                                    height: 250,
+                                    type: 'line',
+                                    zoom: {
+                                        enabled: true
+                                    }
+                                },
+                                    dataLabels: {
+                                    enabled: true,
+                                    enabledOnSeries: [0], // Enable data labels only for the first series
+                                    formatter: function (val, { seriesIndex, dataPointIndex, w }) {
+                                        // Display data label only for the last data point
+                                        if (dataPointIndex === w.globals.series[seriesIndex].length - 1) {
+                                            return val;
+                                        } else {
+                                            return "";
+                                        }
+                                    },
+                                    offsetX: -10,
+                                    offsetY: -5, // Offset the label above the data point
+                                    style: {
+                                        fontSize: '15px',
+                                        fontWeight: 'bold',
+                                        colors: ["#439af2"] // Color of the label
+                                    }, placement: 'below',
+                                },
+                                    stroke: {
+                                    curve: 'straight'
+                                },
+                                    grid: {
+                                    row: {
+                                        colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                                        opacity: 0.5
+                                    },
+                                },
+                                    xaxis: {
+                                    categories: x_axis,
+                                    labels: {
+                                        show: true,
+                                        rotate: -45, // Rotate x-axis labels for better readability
+                                        rotateAlways: true,
+                                        style: {
+                                            fontSize: '10px',
+                                            fontWeight: 'bold'
+                                        }
+                                    },
+                                    title: {
+                                        text: "Date",
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    }, tickAmount: 8
+                                },
+                                    yaxis: {
+                                    labels: {
+                                        show: true,
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    },
+                                    title: {
+                                        text: "Barrels in million",
+                                        style: {
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                        }
+                                    }
+                                }
+                  }).render();
+              });
+                            </script>
+                            <!-- End Line Chart -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Oil production chart end here  -->
+
+                <!-- Left side table end  -->
+            </div>
+        </section>
+</main>
+
+{% endblock body %}
