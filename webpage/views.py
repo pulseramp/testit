@@ -7,6 +7,7 @@ import constant
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 import pandas as pd
+from django.views.decorators.csrf import csrf_protect
 
 ####### this lib for config of values #############
 sys.path.append(constant.CONFIG)
@@ -58,7 +59,7 @@ from django.shortcuts import redirect
 
 
 ####################login wrapper#################
-
+@csrf_protect
 def login_required(view_func):
     def wrapper(request, *args, **kwargs):
         # Check if the user is authenticated
@@ -81,7 +82,7 @@ def login_required(view_func):
 
 #####################  homepage ################################
 #@cache_page(60*15)
-
+@csrf_protect
 def homepage(request):
     return render(request,'base.html')
 
@@ -93,11 +94,13 @@ def error_view(request):
 
 #################### Macro Economics ###########################
 #@cache_page(60*15)
+@csrf_protect
 @login_required
 def macro(request):
     return redirect('/pages-error-404')
 
 ###################  social/ market intelligence ####################
+@csrf_protect
 @cache_page(60*15)
 @login_required
 def socialintelligence(request):
@@ -241,7 +244,9 @@ def socialintelligence(request):
             
 
 
+
 ###########################  Funds /Vcs ###############################
+@csrf_protect
 @cache_page(60*15)
 @login_required
 def VCs(request):   
@@ -359,6 +364,7 @@ def VCs(request):
     return render(request,'VCs.html',context=context)
 
 ##########################  Gems ############################
+@csrf_protect
 @cache_page(60*15)
 @login_required
 def gems(request):
@@ -474,6 +480,7 @@ def gems(request):
 
 
 ################## forecasting page #######################
+@csrf_protect
 @cache_page(60*720)
 @login_required
 def forecasting_value(request):
@@ -483,23 +490,25 @@ def forecasting_value(request):
                                                     
 
 ############# portfolio optimisation ##############
-
+@csrf_protect
 @login_required
 def portfolio_optimisation(request):
     return redirect('/pages-error-404')
 
+@csrf_protect
 @login_required
 def fundamentals(request):
 
     return redirect('/pages-error-404')
 
+@csrf_protect
 @login_required
 def correlation(request):
 
     return redirect('/pages-error-404')
 
 ##################  pages_login ##################
-
+@csrf_protect
 def pages_login(request):
     
    
@@ -529,7 +538,7 @@ def pages_login(request):
 
 ################ pages_register ####################
 
-
+@csrf_protect
 def pages_register(request):
     c_=config_value()
     keys=c_.value_retrieve(MONGODB_CRED_CUST,'registration',{'name':'status'})
@@ -573,6 +582,7 @@ def pages_error(request):
 
 
 #@cache_page(60*60)
+@csrf_protect
 def pages_contact(request): 
     if request.method == 'POST':
 
@@ -601,6 +611,7 @@ def pages_contact(request):
 
         return render(request,'pages-contact.html') 
 
+@csrf_protect
 def logout(request):
     request.session.flush()
 
