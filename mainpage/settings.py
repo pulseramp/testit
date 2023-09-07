@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-p=*chj_shz55h2@p*q+avv2p2_&l7krsy%+j$iplr=^h42qe%a
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+CSRF_TRUSTED_ORIGINS = ['https://coinpulse-ku3k.onrender.com','https://*.127.0.0.1']
 
 ALLOWED_HOSTS = ['*']
 
