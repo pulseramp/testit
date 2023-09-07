@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-p=*chj_shz55h2@p*q+avv2p2_&l7krsy%+j$iplr=^h42qe%a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["coinpulse-ye0d.onrender.com"]
 
 AUTH_USER_MODEL = 'webpage.CustomUser'
 
