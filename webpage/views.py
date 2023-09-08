@@ -2,7 +2,6 @@ from django.shortcuts import render,redirect
 import json
 import sys
 import numpy as np
-import math
 import constant
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
@@ -103,144 +102,11 @@ def macro(request):
 @cache_page(60*15)
 @login_required
 def socialintelligence(request):
+    return redirect('/pages-error-404')
 
-    ### news data ####
-    p=news_agg()
-
-    news,urls=p.cryptopanic()
-    news_list=zip(news, urls)
-
-    ## tabel data for gmx trader ####
-    c=config_value()
-    keys=c.value_retrieve(MONGODB_CRED_DB,MONGODB_COLL,{'name':'dune_gmx'})
-    id=keys['id']
-    keys=keys['api_key']
-
-    ## generating url from data received from mongodb
-    d=dune_analytics(keys)
-    url=d.make_api_url('results',id)
-
-    p=connect_config()
-    dict_values=p.dune_endpoints(url,keys)
-    data=dict_values
-
-    ### preprocessing data for making bar and pie chart
-    
-    d=pre_process()
-    p_b,c_b,p_e,c_e=d.charts_feed_social(data)
-    trade_type_btc=list(p_b.keys())
-    volume_usd_btc=list(p_b.values())
-    avg_price_btc=list(c_b.values())
-    trade_type_eth=list(p_e.keys())
-    volume_usd_eth=list(p_e.values())
-    avg_price_eth=list(c_e.values())
-
-    temp=[]
-    for i in avg_price_btc:
-        if math.isnan(i):
-            temp.append(0)
-        else:
-            temp.append(i)
-    avg_price_btc=temp
-
-    temp=[]
-    for i in avg_price_eth:
-        if math.isnan(i):
-            temp.append(0)
-        else:
-            temp.append(i)
-    avg_price_eth=temp
-
-
-    ### live sentiments analysis ####
-    # p=twitter_analysis()
-    # c=p.twitter_search()
-    # a=c.Analysis.value_counts()
-    # sentiments_labels=[]
-    # sentiments_value=[]
-    # for i,j in a.items():
-    #     sentiments_labels.append(i)
-    #     sentiments_value.append(j)
-
-
-######### Telegram whale alert ##############
-    c_=config_value()
-
-    whale_alert_movements=c_.value_retrieve(MONGODB_TELE,MONGODB_TELE_CHN,{'name':'whale_alert'})
-    whale_alert_movements=whale_alert_movements['channel'].split(',')
-
-    p_=telegram_scrapper()
-    whale_alert_movements_list=p_.scrapping_context(whale_alert_movements,10).clean_context.to_list()
-
-    
-    
-        
-    if request.method == 'POST':
-        topic_user = request.POST.get('topic')
-        # tweet_count = 50
-
-        # c=p.twitter_search(topic_user)
-        # a=c.Analysis.value_counts()
-        # sentiments_labels_user=[]
-        # sentiments_value_user=[]
-        # for i,j in a.items():
-        #     sentiments_labels_user.append(i)
-        #     sentiments_value_user.append(j)
-
-        topic_user=topic_user.upper()
-
-        context={
-        'news_list':news_list,
-        
-        'traders':data,
-        'trade_type_btc':trade_type_btc,
-        'volume_usd_btc':volume_usd_btc,
-        'avg_price_btc':avg_price_btc,
-        'trade_type_eth':trade_type_eth,
-        'volume_usd_eth':volume_usd_eth,
-        'avg_price_eth':avg_price_eth,
-        # 'sentiments_value':sentiments_value,
-        # 'sentiments_labels':sentiments_labels,
-        # 'sentiments_value_user':sentiments_value_user,
-        # 'sentiments_labels_user':sentiments_labels_user,
-        'topic_user':topic_user,
-        'whale_alert_movements_list':whale_alert_movements_list
-        }
-        return render(request,'socialintelligence.html',context=context) 
 
         
 
-
-    else:
-
-        # p=twitter_analysis()
-        # c=p.twitter_search('$ETH')
-        # a=c.Analysis.value_counts()
-        # sentiments_labels_user=[]
-        # sentiments_value_user=[]
-        # for i,j in a.items():
-        #     sentiments_labels_user.append(i)
-        #     sentiments_value_user.append(j)
-
-        context={
-        'news_list':news_list,
-        
-        'traders':data,
-        'trade_type_btc':trade_type_btc,
-        'volume_usd_btc':volume_usd_btc,
-        'avg_price_btc':avg_price_btc,
-        'trade_type_eth':trade_type_eth,
-        'volume_usd_eth':volume_usd_eth,
-        'avg_price_eth':avg_price_eth,
-        # 'sentiments_value':sentiments_value,
-        # 'sentiments_labels':sentiments_labels,
-        # 'sentiments_value_user':sentiments_value_user,
-        # 'sentiments_labels_user':sentiments_labels_user,
-        'topic_user':'$ETH',
-        'whale_alert_movements_list':whale_alert_movements_list
-        }
-        return render(request,'socialintelligence.html',context=context) 
-            
 
 
 
