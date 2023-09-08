@@ -389,7 +389,7 @@ def pages_login(request):
             if password_check==password: 
                 request.session['authenticated'] = True
                  
-                return redirect('/socialintelligence')
+                return redirect('/gems')
             
         except:
             return render(request, 'pages_login.html',{'message':'Invalid user'})
