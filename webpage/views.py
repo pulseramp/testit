@@ -102,7 +102,146 @@ def macro(request):
 @cache_page(60*15)
 @login_required
 def socialintelligence(request):
-    return redirect('/pages-error-404')
+    
+    ### news data ####
+    p=news_agg()
+
+    news,urls=p.cryptopanic()
+    news_list=zip(news, urls)
+
+    ## tabel data for gmx trader ####
+    c=config_value()
+    keys=c.value_retrieve(MONGODB_CRED_DB,MONGODB_COLL,{'name':'dune_gmx'})
+    id=keys['id']
+    keys=keys['api_key']
+
+    ## generating url from data received from mongodb
+    d=dune_analytics(keys)
+    url=d.make_api_url('results',id)
+
+    p=connect_config()
+    dict_values=p.dune_endpoints(url,keys)
+    data=dict_values
+
+    ### preprocessing data for making bar and pie chart
+    
+    d=pre_process()
+    # p_b,c_b,p_e,c_e=d.charts_feed_social(data)
+    p_b,p_e=d.charts_feed_social(data)
+
+    trade_type_btc=list(p_b.keys())
+    volume_usd_btc=list(p_b.values())
+    # avg_price_btc=list(c_b.values())
+    trade_type_eth=list(p_e.keys())
+    volume_usd_eth=list(p_e.values())
+    # avg_price_eth=list(c_e.values())
+
+    # temp=[]
+    # for i in avg_price_btc:
+    #     if math.isnan(i):
+    #         temp.append(0)
+    #     else:
+    #         temp.append(i)
+    # avg_price_btc=temp
+
+    # temp=[]
+    # for i in avg_price_eth:
+    #     if math.isnan(i):
+    #         temp.append(0)
+    #     else:
+    #         temp.append(i)
+    # avg_price_eth=temp
+
+
+    ### live sentiments analysis ####
+    # p=twitter_analysis()
+    # c=p.twitter_search()
+    # a=c.Analysis.value_counts()
+    # sentiments_labels=[]
+    # sentiments_value=[]
+    # for i,j in a.items():
+    #     sentiments_labels.append(i)
+    #     sentiments_value.append(j)
+
+
+######### Telegram whale alert ##############
+    c_=config_value()
+
+    whale_alert_movements=c_.value_retrieve(MONGODB_TELE,MONGODB_TELE_CHN,{'name':'whale_alert'})
+    whale_alert_movements=whale_alert_movements['channel'].split(',')
+
+    p_=telegram_scrapper()
+    whale_alert_movements_list=p_.scrapping_context(whale_alert_movements,10).clean_context.to_list()
+
+    
+    
+        
+    if request.method == 'POST':
+        topic_user = request.POST.get('topic')
+        # tweet_count = 50
+
+        # c=p.twitter_search(topic_user)
+        # a=c.Analysis.value_counts()
+        # sentiments_labels_user=[]
+        # sentiments_value_user=[]
+        # for i,j in a.items():
+        #     sentiments_labels_user.append(i)
+        #     sentiments_value_user.append(j)
+
+        topic_user=topic_user.upper()
+
+        context={
+        'news_list':news_list,
+        
+        'traders':data,
+        'trade_type_btc':trade_type_btc,
+        'volume_usd_btc':volume_usd_btc,
+        # 'avg_price_btc':avg_price_btc,
+        'trade_type_eth':trade_type_eth,
+        'volume_usd_eth':volume_usd_eth,
+        # 'avg_price_eth':avg_price_eth,
+        # 'sentiments_value':sentiments_value,
+        # 'sentiments_labels':sentiments_labels,
+        # 'sentiments_value_user':sentiments_value_user,
+        # 'sentiments_labels_user':sentiments_labels_user,
+        'topic_user':topic_user,
+        'whale_alert_movements_list':whale_alert_movements_list
+        }
+        return render(request,'socialintelligence.html',context=context) 
+
+        
+
+
+    else:
+
+        # p=twitter_analysis()
+        # c=p.twitter_search('$ETH')
+        # a=c.Analysis.value_counts()
+        # sentiments_labels_user=[]
+        # sentiments_value_user=[]
+        # for i,j in a.items():
+        #     sentiments_labels_user.append(i)
+        #     sentiments_value_user.append(j)
+
+        context={
+        'news_list':news_list,
+        
+        'traders':data,
+        'trade_type_btc':trade_type_btc,
+        'volume_usd_btc':volume_usd_btc,
+        # 'avg_price_btc':avg_price_btc,
+        'trade_type_eth':trade_type_eth,
+        'volume_usd_eth':volume_usd_eth,
+        # 'avg_price_eth':avg_price_eth,
+        # 'sentiments_value':sentiments_value,
+        # 'sentiments_labels':sentiments_labels,
+        # 'sentiments_value_user':sentiments_value_user,
+        # 'sentiments_labels_user':sentiments_labels_user,
+        'topic_user':'$ETH',
+        'whale_alert_movements_list':whale_alert_movements_list
+        }
+        return render(request,'socialintelligence.html',context=context) 
+
 
 
         
@@ -115,118 +254,120 @@ def socialintelligence(request):
 @cache_page(60*15)
 @login_required
 def VCs(request):   
+    return redirect('/pages-error-404')
+
 
   
-   # retriving data from mongodb
-    c=config_value()
-    keys=c.value_retrieve(MONGODB_CRED_DB,MONGODB_COLL,{'name':'dune_vc'})
-    id=keys['id']
-    keys=keys['api_key']
+#    # retriving data from mongodb
+#     c=config_value()
+#     keys=c.value_retrieve(MONGODB_CRED_DB,MONGODB_COLL,{'name':'dune_vc'})
+#     id=keys['id']
+#     keys=keys['api_key']
  
 
- ## creating url to get response from dune 
+#  ## creating url to get response from dune 
 
-    d=dune_analytics(keys)
-    url=d.make_api_url('results',id)
-    p=connect_config()
-    dict_values=p.dune_endpoints(url,keys)
+#     d=dune_analytics(keys)
+#     url=d.make_api_url('results',id)
+#     p=connect_config()
+#     dict_values=p.dune_endpoints(url,keys)
 
-    data=dict_values
+#     data=dict_values
 
 
-    # retriving data from mongodb
-    c=config_value()
-    keys=c.value_retrieve(MONGODB_CRED_DB,MONGODB_COLL,{'name':'dune_vc_in_out'})
-    id=keys['id']
-    keys=keys['api_key']
+#     # retriving data from mongodb
+#     c=config_value()
+#     keys=c.value_retrieve(MONGODB_CRED_DB,MONGODB_COLL,{'name':'dune_vc_in_out'})
+#     id=keys['id']
+#     keys=keys['api_key']
  
 
- ## creating url to get response from dune 
+#  ## creating url to get response from dune 
 
-    d=dune_analytics(keys)
-    url=d.make_api_url('results',id)
-    p=connect_config()
-    dict_values=p.dune_endpoints(url,keys)
+#     d=dune_analytics(keys)
+#     url=d.make_api_url('results',id)
+#     p=connect_config()
+#     dict_values=p.dune_endpoints(url,keys)
 
-    data_in_out=dict_values
+#     data_in_out=dict_values
 
-    symbol=[]
-    amount_usd=[]   
+#     symbol=[]
+#     amount_usd=[]   
 
-    #### preprocess for pie chart 
+#     #### preprocess for pie chart 
 
-    for _,j in data.items():
-        symbol.append(j.symbol)
-        amount_usd.append(j.amount_usd)
-
-
-    name_amount_dict = {}  # Dictionary to store unique names and their corresponding amounts
-
-    # Iterate over the lists simultaneously
-    for name, amount in zip(symbol, amount_usd):
-        if name in name_amount_dict:
-            name_amount_dict[name] += amount
-        else:
-            name_amount_dict[name] = amount
-
-    name_amount_dict = dict(sorted(name_amount_dict.items(), key=lambda x: x[1], reverse=True))
-
-    # Get the unique names and their corresponding sums as separate lists
-    symbol = list(name_amount_dict.keys())
-    amount_usd = list(name_amount_dict.values())
+#     for _,j in data.items():
+#         symbol.append(j.symbol)
+#         amount_usd.append(j.amount_usd)
 
 
+#     name_amount_dict = {}  # Dictionary to store unique names and their corresponding amounts
 
-    ##### preprocess for bar chart #####
-    df=pd.DataFrame(data).T
-    set_name=set(df.name)
-    set_name
-    name_vc=[]
-    amount_vc=[]
-    for i in set_name:
-        amount_vc.append(round(df[df.name==f'{i}'].sum()['amount_usd'],2))
-        name_vc.append(i)
+#     # Iterate over the lists simultaneously
+#     for name, amount in zip(symbol, amount_usd):
+#         if name in name_amount_dict:
+#             name_amount_dict[name] += amount
+#         else:
+#             name_amount_dict[name] = amount
+
+#     name_amount_dict = dict(sorted(name_amount_dict.items(), key=lambda x: x[1], reverse=True))
+
+#     # Get the unique names and their corresponding sums as separate lists
+#     symbol = list(name_amount_dict.keys())
+#     amount_usd = list(name_amount_dict.values())
+
+
+
+#     ##### preprocess for bar chart #####
+#     df=pd.DataFrame(data).T
+#     set_name=set(df.name)
+#     set_name
+#     name_vc=[]
+#     amount_vc=[]
+#     for i in set_name:
+#         amount_vc.append(round(df[df.name==f'{i}'].sum()['amount_usd'],2))
+#         name_vc.append(i)
 
          
 
-   ## vc_raises block ###
+#    ## vc_raises block ###
 
-    p=pre_process()
-    raises_vc=p.vc_raises_clean('./static/raises.csv')
+#     p=pre_process()
+#     raises_vc=p.vc_raises_clean('./static/raises.csv')
 
 
 
-    ##### vc /fund raise telegram intelligence #####
+#     ##### vc /fund raise telegram intelligence #####
 
-    c=config_value()
+#     c=config_value()
 
-    tele_crypto_raise_channel=c.value_retrieve(MONGODB_TELE,MONGODB_TELE_CHN,{'name':'crypto_fundraising'})
-    tele_crypto_raise_channel=tele_crypto_raise_channel['channel'].split(',')
+#     tele_crypto_raise_channel=c.value_retrieve(MONGODB_TELE,MONGODB_TELE_CHN,{'name':'crypto_fundraising'})
+#     tele_crypto_raise_channel=tele_crypto_raise_channel['channel'].split(',')
 
-    p=telegram_scrapper()
-    content_df_raises_list=p.scrapping_context(tele_crypto_raise_channel,10).clean_context.to_list()
-    content_df_raises_list=[i.replace('\u200b\u200b','') for i in content_df_raises_list]
-    content_df_raises_list=[i.replace('Crypto Fundraising (StandWithUkraine 🇺🇦) pinned «','') for i in content_df_raises_list]
-    content_df_raises_list=[i.replace('Crypto Fundraising (StandWithUkraine 🇺🇦) pinned a GIF','') for i in content_df_raises_list]
-    content_df_raises_list_final=set(content_df_raises_list)
+#     p=telegram_scrapper()
+#     content_df_raises_list=p.scrapping_context(tele_crypto_raise_channel,10).clean_context.to_list()
+#     content_df_raises_list=[i.replace('\u200b\u200b','') for i in content_df_raises_list]
+#     content_df_raises_list=[i.replace('Crypto Fundraising (StandWithUkraine 🇺🇦) pinned «','') for i in content_df_raises_list]
+#     content_df_raises_list=[i.replace('Crypto Fundraising (StandWithUkraine 🇺🇦) pinned a GIF','') for i in content_df_raises_list]
+#     content_df_raises_list_final=set(content_df_raises_list)
 
  
 
-    context={
+#     context={
         
-        'VCs':data,
-        'VCs_sit':data_in_out,
-        'amount':amount_usd,
-        'token_symbol':symbol,
-        'raises_vc':raises_vc,
-        'content_df_raises_list':content_df_raises_list_final,
-        'name_vc':name_vc,
-        'amount_vc':amount_vc
+#         'VCs':data,
+#         'VCs_sit':data_in_out,
+#         'amount':amount_usd,
+#         'token_symbol':symbol,
+#         'raises_vc':raises_vc,
+#         'content_df_raises_list':content_df_raises_list_final,
+#         'name_vc':name_vc,
+#         'amount_vc':amount_vc
         
-        }
+#         }
 
 
-    return render(request,'VCs.html',context=context)
+#     return render(request,'VCs.html',context=context)
 
 ##########################  Gems ############################
 

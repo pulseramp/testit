@@ -39,15 +39,15 @@ class pre_process:
                 'close-short WBTC':df[df.trade_type=='close-short WBTC'].sum()['volume_usd']
                 }
             
-            dict_final_bar_wbtc={
+            # dict_final_bar_wbtc={
                     
             
-                'open-long WBTC':df[df.trade_type=='open-long WBTC'].mean()['price'],
-                'open-short WBTC':df[df.trade_type=='open-short WBTC'].mean()['price'],
-                'close-long WBTC':df[df.trade_type=='close-long WBTC'].mean()['price'],
-                'close-short WBTC':df[df.trade_type=='close-short WBTC'].mean()['price']
+            #     'open-long WBTC':df[df.trade_type=='open-long WBTC'].mean()['price'],
+            #     'open-short WBTC':df[df.trade_type=='open-short WBTC'].mean()['price'],
+            #     'close-long WBTC':df[df.trade_type=='close-long WBTC'].mean()['price'],
+            #     'close-short WBTC':df[df.trade_type=='close-short WBTC'].mean()['price']
 
-            }
+            # }
             dict_final_pie_weth={
 
                 'open-long WETH':df[df.trade_type=='open-long WETH'].sum()['volume_usd'],
@@ -56,15 +56,17 @@ class pre_process:
                 'close-short WETH':df[df.trade_type=='close-short WETH'].sum()['volume_usd']
                 }
             
-            dict_final_bar_weth={
-                'open-long WETH':df[df.trade_type=='open-long WETH'].mean()['price'],
-                'open-short WETH':df[df.trade_type=='open-short WETH'].mean()['price'],
-                'close-long WETH':df[df.trade_type=='close-long WETH'].mean()['price'],
-                'close-short WETH':df[df.trade_type=='close-short WETH'].mean()['price']
-            }
+            # dict_final_bar_weth={
+            #     'open-long WETH':df[df.trade_type=='open-long WETH'].mean()['price'],
+            #     'open-short WETH':df[df.trade_type=='open-short WETH'].mean()['price'],
+            #     'close-long WETH':df[df.trade_type=='close-long WETH'].mean()['price'],
+            #     'close-short WETH':df[df.trade_type=='close-short WETH'].mean()['price']
+            # }
 
             
-            return dict_final_pie_wbtc,dict_final_bar_wbtc,dict_final_pie_weth,dict_final_bar_weth
+            # return dict_final_pie_wbtc,dict_final_bar_wbtc,dict_final_pie_weth,dict_final_bar_weth 
+            return dict_final_pie_wbtc,dict_final_pie_weth
+            
 
         except:
             pass
