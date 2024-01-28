@@ -392,19 +392,7 @@ def gems(request):
 
 ##### dune smart nft holdings #######
 
-    c_=config_value()
-    keys=c_.value_retrieve(MONGODB_CRED_DB,MONGODB_COLL,{'name':'dune_nfts'})
-    id=keys['id']
-    keys=keys['api_key']
-
-    ## generating url from data received from mongodb
-    d=dune_analytics(keys)
-    url=d.make_api_url('results',id)
-
-
-    p=connect_config()
-    dict_values_nfts=p.dune_endpoints(url,keys) 
-
+   
 
     # ### pie chart for nft ###
 
@@ -472,7 +460,6 @@ def gems(request):
  
     context={
         'dict_values_gems':dict_values_gems,
-        'dict_values_nfts':dict_values_nfts,
         'pie_chart_name':pie_chart_name,
         'pie_chart_value':pie_chart_value,
         'name_degen':name_degen,
